@@ -2,12 +2,14 @@ package com.learnjava.library_events_producer_v2.shared.infrastructure.messaging
 
 import com.learnjava.library_events_producer_v2.shared.domain.DomainEvent;
 import com.learnjava.library_events_producer_v2.shared.domain.EventPublisher;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,10 +21,14 @@ public class KafkaEventPublisher implements EventPublisher {
 
     private final KafkaTemplate<UUID, DomainEvent> kafkaTemplate;
     private final TopicNamingStrategy topicNamingStrategy;
+    private final EventHeadersStrategy headersStrategy;
 
-    public KafkaEventPublisher(KafkaTemplate<UUID, DomainEvent> kafkaTemplate, TopicNamingStrategy topicNamingStrategy) {
+    public KafkaEventPublisher(KafkaTemplate<UUID, DomainEvent> kafkaTemplate,
+                               TopicNamingStrategy topicNamingStrategy,
+                               EventHeadersStrategy headersStrategy) {
         this.kafkaTemplate = kafkaTemplate;
         this.topicNamingStrategy = topicNamingStrategy;
+        this.headersStrategy = headersStrategy;
     }
 
     @Override
@@ -34,7 +40,11 @@ public class KafkaEventPublisher implements EventPublisher {
         String topic = topicNamingStrategy.topicFor(event.getClass());
         UUID key = event.key().orElse(null);
 
-        kafkaTemplate.send(topic, key, event).whenComplete((result, ex) -> {
+        ProducerRecord<UUID, DomainEvent> record = new ProducerRecord<>(topic, key, event);
+        headersStrategy.headersFor(event)
+                .forEach((name, value) -> record.headers().add(name, value.getBytes(StandardCharsets.UTF_8)));
+
+        kafkaTemplate.send(record).whenComplete((result, ex) -> {
             if (ex != null) {
                 log.error("Event could not be sent: topic={}, key={}, event={}", topic, key, event, ex);
             } else {
