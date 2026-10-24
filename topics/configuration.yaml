@@ -1,0 +1,6 @@
+topics:
+  - name: library.library-event
+    partitions: 3
+    replicationFactor: 3
+    configs:
+      min.insync.replicas: 2

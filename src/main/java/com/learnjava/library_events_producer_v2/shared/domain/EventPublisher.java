@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface EventPublisher {
 
-    void publish(List<?> events);
+    void publish(List<? extends DomainEvent> events);
 }

@@ -36,3 +36,12 @@ services:
       <<: *kafka-env
       KAFKA_NODE_ID: 3
       KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka3:19092,EXTERNAL://localhost:9094
+
+  kafka-init:
+    build: ./topics
+    depends_on: [kafka1, kafka2, kafka3]
+    restart: "no"
+    volumes:
+      - ./topics/configuration.yaml:/topics/configuration.yaml:ro
+      - ./topics/topics.sh:/topics/topics.sh:ro
+    command: ["sh", "/topics/topics.sh"]
