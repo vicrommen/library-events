@@ -5,34 +5,26 @@ import com.learnjava.library_events_producer_v2.book.domain.BookId;
 import com.learnjava.library_events_producer_v2.book.domain.BookQueryRepository;
 import com.learnjava.library_events_producer_v2.book.infrastructure.http.rest.CreateBookController.CreateBookRequest;
 import com.learnjava.library_events_producer_v2.book.infrastructure.http.rest.CreateBookController.CreateBookResponse;
+import com.learnjava.library_events_producer_v2.shared.ApiIntegrationTest;
 import com.learnjava.library_events_producer_v2.utils.mother.CreateBookRequestMother;
 import com.learnjava.library_events_producer_v2.utils.mother.HttpEntityMother;
+import com.learnjava.library_events_producer_v2.utils.mother.LibraryEventMother;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.TestRestTemplate;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 
 import java.util.List;
 
 import static com.learnjava.library_events_producer_v2.utils.assertions.BookAssertions.assertCreatedBy;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestRestTemplate
-@EmbeddedKafka(topics = "library.library-event", bootstrapServersProperty = "spring.kafka.bootstrap-servers")
-class CreateBookControllerIntegrationTest {
+class CreateBookControllerIntegrationTest extends ApiIntegrationTest {
 
     private static final String BOOKS_URL = "/api/v1/books";
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private BookQueryRepository bookQueryRepository;
@@ -47,6 +39,8 @@ class CreateBookControllerIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         Book created = bookQueryRepository.findById(new BookId(response.getBody().id())).orElseThrow();
         assertCreatedBy(created, body);
+
+        assertEventPublished(LibraryEventMother.newBook(created));
     }
 
     @Test

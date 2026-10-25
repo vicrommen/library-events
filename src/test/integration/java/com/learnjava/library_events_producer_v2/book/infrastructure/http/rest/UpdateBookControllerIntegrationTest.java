@@ -4,20 +4,18 @@ import com.learnjava.library_events_producer_v2.book.domain.Book;
 import com.learnjava.library_events_producer_v2.book.domain.BookQueryRepository;
 import com.learnjava.library_events_producer_v2.book.domain.BookRepository;
 import com.learnjava.library_events_producer_v2.book.infrastructure.http.rest.UpdateBookController.UpdateBookRequest;
+import com.learnjava.library_events_producer_v2.shared.ApiIntegrationTest;
 import com.learnjava.library_events_producer_v2.utils.mother.BookMother;
 import com.learnjava.library_events_producer_v2.utils.mother.HttpEntityMother;
+import com.learnjava.library_events_producer_v2.utils.mother.LibraryEventMother;
 import com.learnjava.library_events_producer_v2.utils.mother.UpdateBookRequestMother;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.TestRestTemplate;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,15 +23,9 @@ import java.util.UUID;
 import static com.learnjava.library_events_producer_v2.utils.assertions.BookAssertions.assertUpdatedBy;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestRestTemplate
-@EmbeddedKafka(topics = "library.library-event", bootstrapServersProperty = "spring.kafka.bootstrap-servers")
-class UpdateBookControllerIntegrationTest {
+class UpdateBookControllerIntegrationTest extends ApiIntegrationTest {
 
     private static final String BOOK_URL = "/api/v1/books/{id}";
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private BookRepository bookRepository;
@@ -53,6 +45,8 @@ class UpdateBookControllerIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Book updated = bookQueryRepository.findById(book.id()).orElseThrow();
         assertUpdatedBy(updated, body);
+
+        assertEventPublished(LibraryEventMother.updateBook(updated));
     }
 
     @Test
