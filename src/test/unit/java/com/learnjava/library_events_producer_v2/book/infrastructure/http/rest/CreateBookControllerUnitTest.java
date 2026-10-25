@@ -10,8 +10,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,9 +32,12 @@ class CreateBookControllerUnitTest {
     @Test
     void shouldCreateBook() throws Exception {
         CreateBookRequest request = CreateBookRequestMother.random();
+        UUID id = UUID.randomUUID();
+        when(createBook.execute(request.name(), request.author())).thenReturn(id);
 
         mockMvc.perform(MockRequestMother.post(BOOKS_URL, request))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(id.toString()));
 
         verify(createBook).execute(request.name(), request.author());
     }

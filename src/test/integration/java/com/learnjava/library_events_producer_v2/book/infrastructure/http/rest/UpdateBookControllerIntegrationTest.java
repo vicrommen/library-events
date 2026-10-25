@@ -1,6 +1,7 @@
 package com.learnjava.library_events_producer_v2.book.infrastructure.http.rest;
 
 import com.learnjava.library_events_producer_v2.book.domain.Book;
+import com.learnjava.library_events_producer_v2.book.domain.BookQueryRepository;
 import com.learnjava.library_events_producer_v2.book.domain.BookRepository;
 import com.learnjava.library_events_producer_v2.book.infrastructure.http.rest.UpdateBookController.UpdateBookRequest;
 import com.learnjava.library_events_producer_v2.utils.mother.BookMother;
@@ -21,6 +22,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import java.util.List;
 import java.util.UUID;
 
+import static com.learnjava.library_events_producer_v2.utils.assertions.BookAssertions.assertUpdatedBy;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -36,15 +38,21 @@ class UpdateBookControllerIntegrationTest {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BookQueryRepository bookQueryRepository;
+
     @Test
     void shouldUpdateBook() {
         Book book = BookMother.random();
         bookRepository.save(book);
-        HttpEntity<UpdateBookRequest> request = HttpEntityMother.createJsonEntity(UpdateBookRequestMother.random());
+        UpdateBookRequest body = UpdateBookRequestMother.random();
+        HttpEntity<UpdateBookRequest> request = HttpEntityMother.createJsonEntity(body);
 
         ResponseEntity<Void> response = restTemplate.exchange(BOOK_URL, HttpMethod.PUT, request, Void.class, book.id().value());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Book updated = bookQueryRepository.findById(book.id()).orElseThrow();
+        assertUpdatedBy(updated, body);
     }
 
     @Test

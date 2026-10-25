@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 public class CreateBookController implements ApiV1Controller {
 
@@ -24,12 +26,15 @@ public class CreateBookController implements ApiV1Controller {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateBookRequest request) {
+    public ResponseEntity<CreateBookResponse> create(@Valid @RequestBody CreateBookRequest request) {
         log.info("Create book request received: name={}, author={}", request.name(), request.author());
-        createBook.execute(request.name(), request.author());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        UUID id = createBook.execute(request.name(), request.author());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreateBookResponse(id));
     }
 
     public record CreateBookRequest(@NotBlank String name, @NotBlank String author) {
+    }
+
+    public record CreateBookResponse(UUID id) {
     }
 }
