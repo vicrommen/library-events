@@ -1,0 +1,23 @@
+plugins {
+	id 'library-events.spring-service-conventions'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-kafka'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	compileOnly 'io.soabase.record-builder:record-builder-core:44'
+	annotationProcessor 'io.soabase.record-builder:record-builder-processor:44'
+	testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-restclient'
+	testImplementation 'org.springframework.boot:spring-boot-resttestclient'
+	testFixturesImplementation project(':shared-kernel')
+	testFixturesImplementation 'org.springframework:spring-web'
+	testFixturesImplementation 'org.assertj:assertj-core'
+	testFixturesImplementation 'org.springframework:spring-test'
+	testFixturesImplementation 'tools.jackson.core:jackson-databind'
+	testFixturesImplementation 'org.springframework.kafka:spring-kafka'
+	testFixturesImplementation 'org.springframework.kafka:spring-kafka-test'
+}

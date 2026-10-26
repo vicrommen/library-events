@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: library-events-producer-v2
+  docker:
+    compose:
+      file: ../compose.yaml
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.UUIDSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      acks: all
+      retries: 10
+      batch-size: 32KB
+      properties:
+        linger.ms: 10
+        retry.backoff.ms: 1000
+        retry.backoff.max.ms: 10000
+        enable.idempotence: true
+
+app:
+  kafka:
+    topic-prefix: library.

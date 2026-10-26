@@ -1,0 +1,4 @@
+plugins {
+	id 'library-events.java-conventions'
+	id 'java-library'
+}
