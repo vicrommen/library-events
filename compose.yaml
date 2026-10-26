@@ -45,3 +45,11 @@ services:
       - ./topics/configuration.yaml:/topics/configuration.yaml:ro
       - ./topics/topics.sh:/topics/topics.sh:ro
     command: ["sh", "/topics/topics.sh"]
+
+  postgres:
+    image: postgres:18-alpine
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_DB: library_events
+      POSTGRES_USER: library
+      POSTGRES_PASSWORD: library

@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: library-events-consumer
+  docker:
+    compose:
+      file: ../compose.yaml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library_events
+    username: library
+    password: library
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    consumer:
+      group-id: library-events-consumer
+      key-deserializer: org.apache.kafka.common.serialization.UUIDDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      auto-offset-reset: earliest
+
+server:
+  port: 8081
+
+app:
+  kafka:
+    topic-prefix: library.
