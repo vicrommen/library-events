@@ -7,7 +7,7 @@ import com.learnjava.library_events.producer.book.domain.BookName;
 import com.learnjava.library_events.producer.book.domain.BookNotFoundException;
 import com.learnjava.library_events.producer.book.domain.BookQueryRepository;
 import com.learnjava.library_events.producer.book.domain.BookRepository;
-import com.learnjava.library_events.producer.book.domain.LibraryEvent;
+import com.learnjava.library_events.contracts.book.LibraryEvent;
 import com.learnjava.library_events.shared.domain.EventPublisher;
 import com.learnjava.library_events.shared.domain.Result;
 import org.springframework.stereotype.Service;

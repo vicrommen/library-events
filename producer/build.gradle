@@ -6,6 +6,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-kafka'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation project(':contracts')
 	compileOnly 'io.soabase.record-builder:record-builder-core:44'
 	annotationProcessor 'io.soabase.record-builder:record-builder-processor:44'
 	testImplementation 'org.springframework.boot:spring-boot-starter-kafka-test'
@@ -13,6 +14,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testImplementation 'org.springframework.boot:spring-boot-restclient'
 	testImplementation 'org.springframework.boot:spring-boot-resttestclient'
+	testFixturesApi testFixtures(project(':contracts'))
 	testFixturesImplementation project(':shared-kernel')
 	testFixturesImplementation 'org.springframework:spring-web'
 	testFixturesImplementation 'org.assertj:assertj-core'

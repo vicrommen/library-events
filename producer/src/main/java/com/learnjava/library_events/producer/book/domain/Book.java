@@ -1,7 +1,8 @@
 package com.learnjava.library_events.producer.book.domain;
 
-import com.learnjava.library_events.producer.book.domain.LibraryEvent.BookInfo;
-import com.learnjava.library_events.producer.book.domain.LibraryEvent.LibraryEventType;
+import com.learnjava.library_events.contracts.book.LibraryEvent;
+import com.learnjava.library_events.contracts.book.LibraryEvent.BookInfo;
+import com.learnjava.library_events.contracts.book.LibraryEvent.LibraryEventType;
 import com.learnjava.library_events.shared.domain.Result;
 import io.soabase.recordbuilder.core.RecordBuilder;
 

@@ -19,8 +19,15 @@ spring:
     consumer:
       group-id: library-events-consumer
       key-deserializer: org.apache.kafka.common.serialization.UUIDDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+        spring.json.use.type.headers: false
+    listener:
+      concurrency: 3
+      ack-mode: record
 
 server:
   port: 8081
@@ -28,3 +35,7 @@ server:
 app:
   kafka:
     topic-prefix: library.
+    consumer:
+      retry:
+        interval: 1s
+        max-attempts: 3

@@ -1,11 +1,13 @@
-package com.learnjava.library_events.producer.book.domain;
+package com.learnjava.library_events.contracts.book;
 
 import com.learnjava.library_events.shared.domain.DomainEvent;
+import com.learnjava.library_events.shared.domain.EventNaming;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@EventNaming(LibraryEventTopics.LIBRARY_EVENT)
 public record LibraryEvent(LibraryEventType libraryEventType, BookInfo book) implements DomainEvent {
 
     public LibraryEvent {

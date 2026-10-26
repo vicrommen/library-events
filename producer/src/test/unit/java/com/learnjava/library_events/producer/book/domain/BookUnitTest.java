@@ -1,5 +1,6 @@
 package com.learnjava.library_events.producer.book.domain;
 
+import com.learnjava.library_events.contracts.book.LibraryEvent;
 import com.learnjava.library_events.shared.domain.Result;
 import com.learnjava.library_events.producer.utils.assertions.BookAssertions;
 import com.learnjava.library_events.producer.utils.mother.BookMother;

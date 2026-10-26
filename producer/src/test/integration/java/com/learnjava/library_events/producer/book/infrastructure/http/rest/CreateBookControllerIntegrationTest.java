@@ -3,14 +3,14 @@ package com.learnjava.library_events.producer.book.infrastructure.http.rest;
 import com.learnjava.library_events.producer.book.domain.Book;
 import com.learnjava.library_events.producer.book.domain.BookId;
 import com.learnjava.library_events.producer.book.domain.BookQueryRepository;
-import com.learnjava.library_events.producer.book.domain.LibraryEvent;
+import com.learnjava.library_events.contracts.book.LibraryEvent;
 import com.learnjava.library_events.producer.book.infrastructure.http.rest.CreateBookController.CreateBookRequest;
 import com.learnjava.library_events.producer.book.infrastructure.http.rest.CreateBookController.CreateBookResponse;
-import com.learnjava.library_events.producer.utils.kafka.KafkaTopics;
+import com.learnjava.library_events.contracts.utils.kafka.KafkaTopics;
 import com.learnjava.library_events.producer.utils.mother.CreateBookRequestMother;
 import com.learnjava.library_events.producer.utils.mother.HttpEntityMother;
 import com.learnjava.library_events.producer.utils.mother.KafkaConsumerMother;
-import com.learnjava.library_events.producer.utils.mother.LibraryEventMother;
+import com.learnjava.library_events.producer.utils.mother.BookEventMother;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,7 @@ class CreateBookControllerIntegrationTest {
             Book created = bookQueryRepository.findById(new BookId(response.getBody().id())).orElseThrow();
             assertCreatedBy(created, body);
 
-            assertEventPublished(consumer, KafkaTopics.LIBRARY_EVENT, LibraryEventMother.newBook(created));
+            assertEventPublished(consumer, KafkaTopics.LIBRARY_EVENT, BookEventMother.newBook(created));
         }
     }
 

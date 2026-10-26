@@ -1,0 +1,15 @@
+plugins {
+	id 'library-events.java-conventions'
+	id 'java-library'
+	id 'java-test-fixtures'
+}
+
+dependencies {
+	api project(':shared-kernel')
+}
+
+sourceSets {
+	testFixtures {
+		java { srcDirs = ['src/test/utils/java'] }
+	}
+}

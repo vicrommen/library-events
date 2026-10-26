@@ -1,3 +1,3 @@
 rootProject.name = 'library-events'
 
-include 'shared-kernel', 'producer', 'consumer'
+include 'shared-kernel', 'contracts', 'producer', 'consumer'

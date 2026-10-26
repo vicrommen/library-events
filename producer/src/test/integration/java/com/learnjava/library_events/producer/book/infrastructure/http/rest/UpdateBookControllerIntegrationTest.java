@@ -3,13 +3,13 @@ package com.learnjava.library_events.producer.book.infrastructure.http.rest;
 import com.learnjava.library_events.producer.book.domain.Book;
 import com.learnjava.library_events.producer.book.domain.BookQueryRepository;
 import com.learnjava.library_events.producer.book.domain.BookRepository;
-import com.learnjava.library_events.producer.book.domain.LibraryEvent;
+import com.learnjava.library_events.contracts.book.LibraryEvent;
 import com.learnjava.library_events.producer.book.infrastructure.http.rest.UpdateBookController.UpdateBookRequest;
-import com.learnjava.library_events.producer.utils.kafka.KafkaTopics;
+import com.learnjava.library_events.contracts.utils.kafka.KafkaTopics;
 import com.learnjava.library_events.producer.utils.mother.BookMother;
 import com.learnjava.library_events.producer.utils.mother.HttpEntityMother;
 import com.learnjava.library_events.producer.utils.mother.KafkaConsumerMother;
-import com.learnjava.library_events.producer.utils.mother.LibraryEventMother;
+import com.learnjava.library_events.producer.utils.mother.BookEventMother;
 import com.learnjava.library_events.producer.utils.mother.UpdateBookRequestMother;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class UpdateBookControllerIntegrationTest {
             Book updated = bookQueryRepository.findById(book.id()).orElseThrow();
             assertUpdatedBy(updated, body);
 
-            assertEventPublished(consumer, KafkaTopics.LIBRARY_EVENT, LibraryEventMother.updateBook(updated));
+            assertEventPublished(consumer, KafkaTopics.LIBRARY_EVENT, BookEventMother.updateBook(updated));
         }
     }
 

@@ -3,11 +3,11 @@ package com.learnjava.library_events.producer.utils.assertions;
 import com.learnjava.library_events.producer.book.domain.Book;
 import com.learnjava.library_events.producer.book.domain.BookAuthor;
 import com.learnjava.library_events.producer.book.domain.BookName;
-import com.learnjava.library_events.producer.book.domain.LibraryEvent;
+import com.learnjava.library_events.contracts.book.LibraryEvent;
 import com.learnjava.library_events.producer.book.infrastructure.http.rest.CreateBookController.CreateBookRequest;
 import com.learnjava.library_events.producer.book.infrastructure.http.rest.UpdateBookController.UpdateBookRequest;
 import com.learnjava.library_events.shared.domain.Result;
-import com.learnjava.library_events.producer.utils.mother.LibraryEventMother;
+import com.learnjava.library_events.producer.utils.mother.BookEventMother;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +21,7 @@ public final class BookAssertions {
         assertThat(book.id()).isNotNull();
         assertThat(book.name()).isEqualTo(name);
         assertThat(book.author()).isEqualTo(author);
-        assertThat(result.events()).containsExactly(LibraryEventMother.newBook(book));
+        assertThat(result.events()).containsExactly(BookEventMother.newBook(book));
     }
 
     public static void assertUpdate(Book original, BookName name, BookAuthor author, Result<Book, LibraryEvent> result) {
@@ -29,7 +29,7 @@ public final class BookAssertions {
         assertThat(book.id()).isEqualTo(original.id());
         assertThat(book.name()).isEqualTo(name);
         assertThat(book.author()).isEqualTo(author);
-        assertThat(result.events()).containsExactly(LibraryEventMother.updateBook(book));
+        assertThat(result.events()).containsExactly(BookEventMother.updateBook(book));
     }
 
     public static void assertCreatedBy(Book book, CreateBookRequest request) {
