@@ -3,9 +3,9 @@ spring:
     name: library-events-consumer
   docker:
     compose:
-      file: ../compose.yaml
+      file: compose.yaml
   datasource:
-    url: jdbc:postgresql://localhost:5432/library_events
+    url: jdbc:postgresql://localhost:5433/library_events
     username: library
     password: library
   jpa:

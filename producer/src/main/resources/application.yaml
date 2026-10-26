@@ -3,7 +3,7 @@ spring:
     name: library-events-producer
   docker:
     compose:
-      file: ../compose.yaml
+      file: compose.yaml
   kafka:
     bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
     producer:

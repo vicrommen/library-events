@@ -54,3 +54,7 @@ configurations {
 tasks.named('check') {
 	dependsOn(testing.suites.integrationTest)
 }
+
+tasks.named('bootRun') {
+	workingDir = rootDir
+}
