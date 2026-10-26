@@ -1,6 +1,6 @@
 spring:
   application:
-    name: library-events-producer-v2
+    name: library-events-producer
   docker:
     compose:
       file: ../compose.yaml
