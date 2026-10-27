@@ -50,6 +50,12 @@ services:
     image: postgres:18-alpine
     ports: ["5433:5432"]
     environment:
-      POSTGRES_DB: library_events
+      POSTGRES_DB: library_events_consumer
       POSTGRES_USER: library
       POSTGRES_PASSWORD: library
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
