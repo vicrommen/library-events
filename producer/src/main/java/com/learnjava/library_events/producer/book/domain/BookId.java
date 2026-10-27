@@ -1,5 +1,7 @@
 package com.learnjava.library_events.producer.book.domain;
 
+import com.learnjava.library_events.shared.domain.UuidGenerator;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,7 +12,7 @@ public record BookId(UUID value) {
     }
 
     public static BookId generate() {
-        return new BookId(UUID.randomUUID());
+        return new BookId(UuidGenerator.generate());
     }
 
     public static BookId of(String value) {
