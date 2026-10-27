@@ -15,8 +15,16 @@ public record BookLog(BookLogId id, BookId bookId, BookLogType type, BookLogMess
         occurredAt = occurredAt.truncatedTo(ChronoUnit.MICROS);
     }
 
-    public static BookLog create(BookId bookId, BookLogType type, BookLogMessage message, Instant occurredAt) {
-        return new BookLog(BookLogId.generate(), bookId, type, message, occurredAt);
+    public static BookLog bookCreated(BookId bookId, String name, String author, Instant occurredAt) {
+        return create(bookId, BookLogType.BOOK_CREATED, name, author, occurredAt);
+    }
+
+    public static BookLog bookUpdated(BookId bookId, String name, String author, Instant occurredAt) {
+        return create(bookId, BookLogType.BOOK_UPDATED, name, author, occurredAt);
+    }
+
+    private static BookLog create(BookId bookId, BookLogType type, String name, String author, Instant occurredAt) {
+        return new BookLog(BookLogId.generate(), bookId, type, BookLogMessage.describing(type, name, author), occurredAt);
     }
 
     @Override

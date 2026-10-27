@@ -34,6 +34,18 @@ class BookLogMessageUnitTest {
     }
 
     @Test
+    void shouldDescribeBookCreated() {
+        assertThat(BookLogMessage.describing(BookLogType.BOOK_CREATED, "Clean Code", "Robert C. Martin").value())
+                .isEqualTo("Book 'Clean Code' by Robert C. Martin was created");
+    }
+
+    @Test
+    void shouldDescribeBookUpdated() {
+        assertThat(BookLogMessage.describing(BookLogType.BOOK_UPDATED, "Clean Code", "Robert C. Martin").value())
+                .isEqualTo("Book 'Clean Code' by Robert C. Martin was updated");
+    }
+
+    @Test
     void shouldBeEqualWhenStrippedValuesAreEqual() {
         assertThat(new BookLogMessage(" Book created ")).isEqualTo(new BookLogMessage("Book created"));
     }

@@ -12,28 +12,40 @@ import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 class BookLogUnitTest {
 
     @Test
-    void shouldCreateBookLog() {
+    void shouldCreateBookCreatedLog() {
         BookId bookId = BookLogMother.randomBookId();
-        BookLogMessage message = BookLogMother.randomMessage();
         Instant occurredAt = Instant.parse("2026-10-27T10:00:00.123456Z");
 
-        BookLog bookLog = BookLog.create(bookId, BookLogType.BOOK_UPDATED, message, occurredAt);
+        BookLog bookLog = BookLog.bookCreated(bookId, "Clean Code", "Robert C. Martin", occurredAt);
+
+        assertThat(bookLog.id()).isNotNull();
+        assertThat(bookLog.bookId()).isEqualTo(bookId);
+        assertThat(bookLog.type()).isEqualTo(BookLogType.BOOK_CREATED);
+        assertThat(bookLog.message()).isEqualTo(BookLogMessage.describing(BookLogType.BOOK_CREATED, "Clean Code", "Robert C. Martin"));
+        assertThat(bookLog.occurredAt()).isEqualTo(occurredAt);
+    }
+
+    @Test
+    void shouldCreateBookUpdatedLog() {
+        BookId bookId = BookLogMother.randomBookId();
+        Instant occurredAt = Instant.parse("2026-10-27T10:00:00.123456Z");
+
+        BookLog bookLog = BookLog.bookUpdated(bookId, "Clean Code", "Robert C. Martin", occurredAt);
 
         assertThat(bookLog.id()).isNotNull();
         assertThat(bookLog.bookId()).isEqualTo(bookId);
         assertThat(bookLog.type()).isEqualTo(BookLogType.BOOK_UPDATED);
-        assertThat(bookLog.message()).isEqualTo(message);
+        assertThat(bookLog.message()).isEqualTo(BookLogMessage.describing(BookLogType.BOOK_UPDATED, "Clean Code", "Robert C. Martin"));
         assertThat(bookLog.occurredAt()).isEqualTo(occurredAt);
     }
 
     @Test
     void shouldGenerateDifferentIdsOnCreate() {
         BookId bookId = BookLogMother.randomBookId();
-        BookLogMessage message = BookLogMother.randomMessage();
         Instant occurredAt = Instant.now();
 
-        BookLog first = BookLog.create(bookId, BookLogType.BOOK_CREATED, message, occurredAt);
-        BookLog second = BookLog.create(bookId, BookLogType.BOOK_CREATED, message, occurredAt);
+        BookLog first = BookLog.bookCreated(bookId, "Clean Code", "Robert C. Martin", occurredAt);
+        BookLog second = BookLog.bookCreated(bookId, "Clean Code", "Robert C. Martin", occurredAt);
 
         assertThat(first.id()).isNotEqualTo(second.id());
     }
@@ -42,8 +54,7 @@ class BookLogUnitTest {
     void shouldTruncateOccurredAtToMicros() {
         Instant occurredAt = Instant.parse("2026-10-27T10:00:00.123456789Z");
 
-        BookLog bookLog = BookLog.create(BookLogMother.randomBookId(), BookLogType.BOOK_CREATED,
-                BookLogMother.randomMessage(), occurredAt);
+        BookLog bookLog = BookLog.bookCreated(BookLogMother.randomBookId(), "Clean Code", "Robert C. Martin", occurredAt);
 
         assertThat(bookLog.occurredAt()).isEqualTo(occurredAt.truncatedTo(ChronoUnit.MICROS));
     }
