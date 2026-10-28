@@ -5,6 +5,8 @@ import com.learnjava.library_events.consumer.booklog.domain.BookLog;
 import com.learnjava.library_events.consumer.booklog.domain.BookLogId;
 import com.learnjava.library_events.consumer.booklog.domain.BookLogMessage;
 import com.learnjava.library_events.consumer.booklog.domain.BookLogType;
+import com.learnjava.library_events.contracts.book.LibraryEvent;
+import com.learnjava.library_events.contracts.book.LibraryEvent.BookInfo;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -24,6 +26,16 @@ public final class BookLogMother {
 
     public static BookLog withId(BookLogId id) {
         return create(id, randomBookId(), BookLogType.BOOK_CREATED, randomMessage(), Instant.now());
+    }
+
+    public static BookLog bookCreated(LibraryEvent event, Instant occurredAt) {
+        BookInfo book = event.book();
+        return BookLog.bookCreated(new BookId(book.id()), book.name(), book.author(), occurredAt);
+    }
+
+    public static BookLog bookUpdated(LibraryEvent event, Instant occurredAt) {
+        BookInfo book = event.book();
+        return BookLog.bookUpdated(new BookId(book.id()), book.name(), book.author(), occurredAt);
     }
 
     public static BookId randomBookId() {

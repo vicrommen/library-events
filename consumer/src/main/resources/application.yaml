@@ -26,7 +26,7 @@ spring:
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
         spring.json.use.type.headers: false
     listener:
-      concurrency: 3
+      concurrency: 1
       ack-mode: record
 
 server:
